@@ -1,34 +1,44 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard | Club Membership{% endblock %}
 
 {% block content %}
-<div class="dashboard">
-    <h1>Welcome, {{ user.username }}!</h1>
-    <p>Your Membership Status: 
-        {% if membership_status %}
-            <span style="color: green;">Active Member</span>
-        {% else %}
-            <span style="color: red;">Not a Member</span>
-        {% endif %}
-    </p>
+<div class="content-box dashboard">
+    <h1><i class="fas fa-tachometer-alt"></i> Welcome, {{ user.username }}!</h1>
+    
+    <div class="membership-status">
+        <p>Your Membership Status: 
+            {% if membership_status %}
+                <span class="status-badge status-active"><i class="fas fa-check-circle"></i> Active Member</span>
+            {% else %}
+                <span class="status-badge status-inactive"><i class="fas fa-times-circle"></i> Not a Member</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
 
-    <h2>Your Enrolled Activities</h2>
-    <ul>
+<div class="content-box">
+    <h2><i class="fas fa-calendar-check"></i> Your Enrolled Activities</h2>
+    <ul class="activity-list">
         {% for activity in activities %}
-            <li class="activity">
-                <h3>{{ activity.name }}</h3>
-                <p>{{ activity.description }}</p>
+            <li class="activity-card">
+                <img src="https://ui-avatars.com/api/?name=A&background=4e54c8&color=fff&size=128" alt="Activity" class="activity-icon">
+                <div class="activity-details">
+                    <h3>{{ activity.name }}</h3>
+                    <p>{{ activity.description }}</p>
+                </div>
             </li>
         {% empty %}
-            <li>You are not enrolled in any activities.</li>
+            <li class="no-activities">You are not enrolled in any activities.</li>
         {% endfor %}
     </ul>
+</div>
 
-    <div class="actions">
-        <a href="{% url 'profile' %}" class="btn">View Profile</a>
-        <a href="{% url 'logout' %}" class="btn">Logout</a>
+<div class="content-box">
+    <div class="action-buttons">
+        <a href="{% url 'profile' %}" class="btn"><i class="fas fa-user-circle"></i> View Profile</a>
+        <a href="{% url 'logout' %}" class="btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 </div>
 {% endblock %}

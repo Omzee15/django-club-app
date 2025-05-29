@@ -11,10 +11,11 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            messages.success(request, f"Welcome back, {username}!")
             return redirect('dashboard')
         else:
-            messages.error(request, 'Invalid username or password')
-            return render(request, 'members/login.html', {'error': 'Invalid credentials'})
+            messages.error(request, 'Invalid username or password. Please try again.')
+            return render(request, 'members/login.html')
     return render(request, 'members/login.html')
 
 @login_required
@@ -54,24 +55,47 @@ def profile(request):
     return render(request, 'members/profile.html', context)
 
 def register(request):
+    # Get all available activities to display on the form
+    activities = Activity.objects.all()
+    
     if request.method == 'POST':
         # Get form data
         username = request.POST['username']
         email = request.POST['email']
         password = request.POST['password']
         
+        # Get selected activities - try both database IDs and hardcoded values
+        selected_activity_ids = request.POST.getlist('activities')
+        selected_activity_names = request.POST.getlist('activities_hardcoded')
+        
         # Check if user already exists
         from django.contrib.auth.models import User
         if User.objects.filter(username=username).exists():
             messages.error(request, f"Username '{username}' is already taken. Please choose another username.")
-            return render(request, 'members/register.html')
+            return render(request, 'members/register.html', {'activities': activities})
         
         try:
             # Create user
             user = User.objects.create_user(username=username, email=email, password=password)
             
             # Create membership
-            Membership.objects.create(user=user, is_member=True)
+            membership = Membership.objects.create(user=user, is_member=True)
+            
+            # Add selected activities to the user's membership
+            for activity_id in selected_activity_ids:
+                try:
+                    activity = Activity.objects.get(id=activity_id)
+                    activity.members.add(membership)
+                except Activity.DoesNotExist:
+                    continue
+            
+            # Process hardcoded activities if any were selected
+            for activity_name in selected_activity_names:
+                activity, created = Activity.objects.get_or_create(
+                    name=activity_name,
+                    defaults={'description': f'{activity_name} activity'}
+                )
+                activity.members.add(membership)
             
             # Login the user
             login(request, user)
@@ -79,6 +103,6 @@ def register(request):
             return redirect('dashboard')
         except Exception as e:
             messages.error(request, f"An error occurred during registration: {str(e)}")
-            return render(request, 'members/register.html')
+            return render(request, 'members/register.html', {'activities': activities})
     
-    return render(request, 'members/register.html')
+    return render(request, 'members/register.html', {'activities': activities})

@@ -3,30 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity Detail</title>
+    <title>{% block title %}Activity Detail{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     {% extends 'base.html' %}
+    {% load static %}
 
     {% block content %}
-    <h1>{{ activity.name }}</h1>
-    <p>{{ activity.description }}</p>
-    <p>Date: {{ activity.date }}</p>
-    <p>Time: {{ activity.time }}</p>
-    <p>Location: {{ activity.location }}</p>
+    <div class="content-box">
+        <h1>{{ activity.name }}</h1>
+        <div class="activity-details">
+            <p>{{ activity.description }}</p>
+            <p>Date: {{ activity.date }}</p>
+            <p>Time: {{ activity.time }}</p>
+            <p>Location: {{ activity.location }}</p>
+        </div>
 
-    {% if user.is_authenticated %}
-        <h2>Your Enrollment Status</h2>
-        {% if user in activity.enrolled_users.all %}
-            <p>You are enrolled in this activity.</p>
-        {% else %}
-            <p>You are not enrolled in this activity.</p>
-            <a href="{% url 'enroll_activity' activity.id %}">Enroll Now</a>
-        {% endif %}
-    {% else %}
-        <p>Please <a href="{% url 'login' %}">login</a> to see your enrollment status.</p>
-    {% endif %}
+        <div class="membership-status">
+            {% if user.is_authenticated %}
+                <h2>Your Enrollment Status</h2>
+                {% if user in activity.enrolled_users.all %}
+                    <span class="status-badge status-active"><i class="fas fa-check-circle"></i> You are enrolled in this activity</span>
+                {% else %}
+                    <span class="status-badge status-inactive"><i class="fas fa-times-circle"></i> You are not enrolled in this activity</span>
+                    <a href="{% url 'enroll_activity' activity.id %}" class="btn"><i class="fas fa-plus-circle"></i> Enroll Now</a>
+                {% endif %}
+            {% else %}
+                <p>Please <a href="{% url 'login' %}">login</a> to see your enrollment status.</p>
+            {% endif %}
+        </div>
+    </div>
     {% endblock %}
 </body>
 </html>

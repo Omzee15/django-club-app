@@ -1,26 +1,76 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Register | Club Membership{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="register-wrapper">
+    <img src="https://ui-avatars.com/api/?name=New+User&background=4e54c8&color=fff&size=128" alt="Register" class="profile-picture">
     <h2>Create an Account</h2>
+    
+    {% if messages %}
+    <div class="alert alert-danger">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+    {% endif %}
+    
     <form method="post">
         {% csrf_token %}
         <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <label for="username"><i class="fas fa-user"></i> Username:</label>
+            <input type="text" id="username" name="username" required placeholder="Choose a username">
         </div>
         <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
+            <label for="email"><i class="fas fa-envelope"></i> Email:</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
         </div>
         <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <label for="password"><i class="fas fa-lock"></i> Password:</label>
+            <input type="password" id="password" name="password" required placeholder="Create a password">
         </div>
-        <button type="submit" class="btn">Register</button>
+        
+        <div class="form-group activity-selection">
+            <label><i class="fas fa-running"></i> Select Your Preferred Activities:</label>
+            <div class="activity-options">
+                <!-- Dynamic activities from database -->
+                {% for activity in activities %}
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_{{ activity.id }}" name="activities" value="{{ activity.id }}">
+                    <label for="activity_{{ activity.id }}">{{ activity.name }}</label>
+                </div>
+                {% empty %}
+                <!-- Fallback hardcoded activities if database is empty -->
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_chess" name="activities_hardcoded" value="Chess">
+                    <label for="activity_chess"><i class="fas fa-chess"></i> Chess</label>
+                </div>
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_cricket" name="activities_hardcoded" value="Cricket">
+                    <label for="activity_cricket"><i class="fas fa-baseball-ball"></i> Cricket</label>
+                </div>
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_football" name="activities_hardcoded" value="Football">
+                    <label for="activity_football"><i class="fas fa-futbol"></i> Football</label>
+                </div>
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_pool" name="activities_hardcoded" value="Pool">
+                    <label for="activity_pool"><i class="fas fa-circle"></i> Pool</label>
+                </div>
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_gym" name="activities_hardcoded" value="Gym">
+                    <label for="activity_gym"><i class="fas fa-dumbbell"></i> Gym</label>
+                </div>
+                <div class="activity-option">
+                    <input type="checkbox" id="activity_swimming" name="activities_hardcoded" value="Swimming">
+                    <label for="activity_swimming"><i class="fas fa-swimmer"></i> Swimming</label>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <button type="submit" class="btn"><i class="fas fa-user-plus"></i> Register</button>
     </form>
     <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
 </div>

@@ -8,6 +8,7 @@ This is a Django application for managing club memberships. Users can log in, vi
 - Dashboard displaying enrolled activities
 - Membership status indication
 - Activity enrollment
+- Activity selection during registration
 
 ## Installation
 
@@ -31,21 +32,27 @@ This is a Django application for managing club memberships. Users can log in, vi
    python manage.py migrate
    ```
 
-5. Create a superuser (optional, for admin access):
+5. Add sample activities:
+   ```
+   python manage.py add_sample_activities
+   ```
+
+6. Create a superuser (optional, for admin access):
    ```
    python manage.py createsuperuser
    ```
 
-6. Run the development server:
+7. Run the development server:
    ```
    python manage.py runserver
    ```
 
-7. Access the application at `http://127.0.0.1:8000/`.
+8. Access the application at `http://127.0.0.1:8000/`.
 
 ## Usage
 
 - Visit the login page to authenticate.
+- During registration, select your preferred activities.
 - After logging in, users will be redirected to their dashboard where they can see their enrolled activities and membership status.
 - Users can log out using the provided option on the dashboard.
 
