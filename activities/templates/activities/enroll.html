@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll in Activity</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Enroll in Activity</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="activity">Select Activity:</label>
+                <select name="activity" id="activity" required>
+                    {% for activity in activities %}
+                        <option value="{{ activity.id }}">{{ activity.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn">Enroll</button>
+        </form>
+        <a href="{% url 'members:dashboard' %}">Back to Dashboard</a>
+    </div>
+</body>
+</html>

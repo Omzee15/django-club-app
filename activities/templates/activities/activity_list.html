@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Activity List{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Available Activities</h1>
+    <ul>
+        {% for activity in activities %}
+            <li>
+                <a href="{% url 'activity_detail' activity.id %}">{{ activity.name }}</a>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'enroll' activity.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Enroll</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li>No activities available at the moment.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'logout' %}">Logout</a>
+</div>
+{% endblock %}

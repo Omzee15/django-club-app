@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}User Profile{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    {% extends 'base.html' %}
+    {% load static %}
+
+    {% block title %}User Profile{% endblock %}
+    {% block content %}
+    <div class="profile-container">
+        <h1>{{ user.username }}'s Profile</h1>
+        <p>Email: {{ user.email }}</p>
+        <p>Membership Status: 
+            {% if membership %}
+                <span style="color: green;">Active Member</span>
+            {% else %}
+                <span style="color: red;">Not a Member</span>
+            {% endif %}
+        </p>
+
+        <h2>Enrolled Activities</h2>
+        <ul>
+            {% for activity in activities %}
+                <li>{{ activity.name }} - {{ activity.description }}</li>
+            {% empty %}
+                <li>No activities enrolled.</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{% url 'dashboard' %}" class="btn">Back to Dashboard</a>
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+    </div>
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <h1>Welcome, {{ user.username }}!</h1>
+    <p>Your Membership Status: 
+        {% if membership_status %}
+            <span style="color: green;">Active Member</span>
+        {% else %}
+            <span style="color: red;">Not a Member</span>
+        {% endif %}
+    </p>
+
+    <h2>Your Enrolled Activities</h2>
+    <ul>
+        {% for activity in activities %}
+            <li class="activity">
+                <h3>{{ activity.name }}</h3>
+                <p>{{ activity.description }}</p>
+            </li>
+        {% empty %}
+            <li>You are not enrolled in any activities.</li>
+        {% endfor %}
+    </ul>
+
+    <div class="actions">
+        <a href="{% url 'profile' %}" class="btn">View Profile</a>
+        <a href="{% url 'logout' %}" class="btn">Logout</a>
+    </div>
+</div>
+{% endblock %}
